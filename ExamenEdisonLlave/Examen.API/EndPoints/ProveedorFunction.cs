@@ -99,8 +99,15 @@ namespace Examen.API.EndPoints
             var data = new Proveedor();
             data.RowKey = id;
             var res = req.CreateResponse(HttpStatusCode.OK);
-            await res.WriteAsJsonAsync(_repositorio.ListarUno<Proveedor>(data));
-            return res;
+            if (_repositorio.ListarUno<Proveedor>(data).Result != null)
+            {
+                await res.WriteAsJsonAsync(_repositorio.ListarUno<Proveedor>(data).Result);
+                return res;
+            }
+            var notFoundResponse = req.CreateResponse(HttpStatusCode.NotFound);
+            var errorMensaje = new { mensaje = $"Proveedor con ID: {id} no encontrado." };
+            await notFoundResponse.WriteAsJsonAsync(errorMensaje);
+            return notFoundResponse;
         }
     }
 }
