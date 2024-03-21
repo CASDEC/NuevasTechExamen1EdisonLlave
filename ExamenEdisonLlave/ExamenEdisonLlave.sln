@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "APIMicroservicios", "APIMic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{EF43D377-FFBC-4137-BBDE-0282AC4BB118}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examen.API", "Examen.API\Examen.API.csproj", "{8BE23E31-BD69-4A0F-90CA-BF5DBCF3C562}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examen.API", "Examen.API\Examen.API.csproj", "{8BE23E31-BD69-4A0F-90CA-BF5DBCF3C562}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examen.Shared", "Examen.Shared\Examen.Shared.csproj", "{460F0152-F24A-49D0-8D81-79BBE4A4D21E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examen.Shared", "Examen.Shared\Examen.Shared.csproj", "{460F0152-F24A-49D0-8D81-79BBE4A4D21E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
