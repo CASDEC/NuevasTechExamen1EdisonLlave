@@ -19,9 +19,8 @@ namespace Examen.API.Implementacion.Repositorios
         public async Task<bool> Actualizar<T>(T tmodelo) where T : ITableEntity
         {
             var tabla = new TableClient(cadenaConexion, tmodelo.GetType().Name);
-            await tabla.CreateIfNotExistsAsync();
+            tabla.CreateIfNotExists();
             tmodelo.PartitionKey = tmodelo.GetType().Name + "es";
-
             var entidad = await tabla.GetEntityAsync<TableEntity>(tmodelo.PartitionKey, tmodelo.RowKey);
             if (entidad.Value != null)
             {
@@ -38,7 +37,7 @@ namespace Examen.API.Implementacion.Repositorios
         public async Task<bool> Eliminar<T>(T tmodelo) where T : ITableEntity
         {
             var tabla = new TableClient(cadenaConexion, tmodelo.GetType().Name);
-            tabla.CreateIfNotExistsAsync();
+            tabla.CreateIfNotExists();
             tmodelo.PartitionKey = tmodelo.GetType().Name + "es";
             await tabla.DeleteEntityAsync(tmodelo.PartitionKey, tmodelo.RowKey);
             return true;
@@ -49,7 +48,7 @@ namespace Examen.API.Implementacion.Repositorios
             try
             {
                 var tabla = new TableClient(cadenaConexion, tmodelo.GetType().Name);
-                tabla.CreateIfNotExistsAsync();
+                tabla.CreateIfNotExists();
                 tmodelo.PartitionKey = tmodelo.GetType().Name + "es";
                 tmodelo.RowKey = Guid.NewGuid().ToString();
                 await tabla.UpsertEntityAsync(tmodelo);
@@ -64,7 +63,7 @@ namespace Examen.API.Implementacion.Repositorios
         public async Task<IAsyncEnumerable<TableEntity>> ListarTodos<T>() where T : ITableEntity, new()
         {
             var tabla = new TableClient(cadenaConexion, typeof(T).Name);
-            tabla.CreateIfNotExistsAsync();
+            tabla.CreateIfNotExists();
             var pageResponse = tabla.QueryAsync<TableEntity>(filter: "", maxPerPage: 10);
             return pageResponse;
         }
@@ -72,10 +71,15 @@ namespace Examen.API.Implementacion.Repositorios
         public async Task<TableEntity> ListarUno<T>(T tmodelo) where T : ITableEntity
         {
             var tabla = new TableClient(cadenaConexion, typeof(T).Name);
-            tabla.CreateIfNotExistsAsync();
+            tabla.CreateIfNotExists();
             tmodelo.PartitionKey = tmodelo.GetType().Name + "es";
-            var data = tabla.GetEntityAsync<TableEntity>(tmodelo.PartitionKey, tmodelo.RowKey);
-            return data.Result;
+            var exist = await tabla.GetEntityIfExistsAsync<TableEntity>(tmodelo.PartitionKey, tmodelo.RowKey);
+            if (exist.HasValue)
+            {
+                var data = await tabla.GetEntityAsync<TableEntity>(tmodelo.PartitionKey, tmodelo.RowKey);
+                return data;
+            }
+            return null;
         }
     }
 }
